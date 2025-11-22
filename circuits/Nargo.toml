@@ -4,3 +4,4 @@ type = "bin"
 authors = [""]
 
 [dependencies]
+noir_bignum = { tag = "v0.8.2", git = "https://github.com/noir-lang/noir-bignum" }
