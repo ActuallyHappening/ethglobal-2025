@@ -7,11 +7,8 @@ const scripts_dir = path self .
 cd $scripts_dir
 cd ..
 
-let _live = input "Live? (y/N): "
-mut live = false;
-if _live == "y" {
-	$live = true
-}
+let local = (input "Local? (Y/n): ") != "n"
+print "local" $local
 
 do {
 	cd contracts
@@ -20,7 +17,7 @@ do {
 
 	forge build
 
-	let rpc_url = "localhost:8545"
+	let rpc_url = if $local { "localhost:8545" } else { "garfield_testnet" }
 
 	(forge script script/Deploy.s.sol:DeployScript
     --rpc-url $rpc_url)
@@ -32,12 +29,23 @@ do {
 	)
 
 	# extract string between markers 📡
-	let contract_address = $output | split row '📡' | get 1 | str trim
-	print "Deployed master contract at: $contract_address"
-	# let $contract_address = input "Contract Address: "
+	let master_addr = $output | split row '📡' | get 1 | str trim
+	print $"Deployed master contract at: ($master_addr)"
+	let eip7702_addr = $output | split row '🛝' | get 1 | str trim
+	print $"Deployed eip7702 contract at: ($eip7702_addr)"
 
-	(forge verify-contract -vvvvv $"($contract_address)" src/MasterContract.sol:MasterContract
-	--chain-id 48898
-	--verifier sourcify
-	--verifier-url https://sourcify.dev/server)
+	if not $local {
+		(forge verify-contract -vvvvv $"($master_addr)" src/MasterContract.sol:MasterContract
+		--chain-id 48898
+		--verifier sourcify
+		--verifier-url https://sourcify.dev/server)
+
+		(forge verify-contract -vvvvv $"($eip7702_addr)" src/EIP7702.sol:EIP7702
+		--chain-id 48898
+		--verifier sourcify
+		--verifier-url https://sourcify.dev/server)
+
+		print $"Verified master contract: https://explorer.garfield-testnet.zircuit.com/address/($master_addr)"
+		print $"Verified EIP7702 contract: https://explorer.garfield-testnet.zircuit.com/address/($eip7702_addr)"
+	}
 }
