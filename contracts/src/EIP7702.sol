@@ -4,12 +4,15 @@ pragma solidity ^0.8.13;
 import "./IMasterControl.sol";
 
 /// @title EIP7702
-/// @notice EIP-7702 delegation contract that enforces MasterControl policies
 contract EIP7702 {
-    /// @notice Immutable reference to the MasterControl verifier
-    address public immutable masterControl;
+    /// @notice Reference to the MasterContract verifier
+    address public verifyingContract;
 
-    /// @notice Event emitted when a transaction is executed
+    /// @notice The master account that can update the validation
+    /// [verifyingContract] of this EOA
+    address public owner;
+
+    /// @notice Event emitted when a transaction is validated
     event Executed(
         address indexed caller,
         address indexed recipient,
@@ -21,37 +24,56 @@ contract EIP7702 {
     error InvalidMasterControl();
 
     /// @notice Error when transaction is not allowed
-    error TransactionNotAllowed();
+    error TransactionInvalid();
+
+    error MustHaveOwner();
 
     /// @notice Constructor sets the immutable MasterControl address
-    /// @param _masterControl The address of the MasterControl verifier
-    constructor(address _masterControl) {
-        if (_masterControl == address(0)) revert InvalidMasterControl();
-        masterControl = _masterControl;
+    constructor(address _verifyingContract, address _owner) {
+        if (_verifyingContract == address(0)) revert InvalidMasterControl();
+        verifyingContract = _verifyingContract;
+
+        if (_verifyingContract == address(0)) revert MustHaveOwner();
+        owner = _owner;
     }
 
-    /// @notice Execute a transaction after verification by MasterControl
-    /// @param _recipient The recipient address
-    /// @param _amount The amount to transfer
-    /// @return True if execution was successful
-    function execute(
-        address _recipient,
-        uint256 _amount,
-        bytes memory _data
-    ) external returns (bool) {
-        // Verify with MasterControl
-        bool allowed = IMasterControl(masterControl).verify(
-            _recipient,
-            _amount
+    modifier onlyOwner() {
+        if (owner != msg.sender) revert InvalidMasterControl();
+        _;
+    }
+
+    function updateVerifyingContract(
+        address _verifyingContract
+    ) external onlyOwner {
+        verifyingContract = _verifyingContract;
+    }
+
+    function verify(Call calldata _call) public view returns (bool) {
+        bool allowed = IMasterControl(verifyingContract).verify(
+            _call.to,
+            _call.value,
+            _call.data
         );
+        return allowed;
+    }
 
-        if (!allowed) revert TransactionNotAllowed();
+    struct Call {
+        address to;
+        uint256 value;
+        bytes data;
+    }
 
-        /*  (bool success, ) = _recipient.delegatecall(abi.encodeWithSignature("", _data));
-         require(success, "Delegate call failed"); */
-        // Emit event on successful execution
-        emit Executed(msg.sender, _recipient, _amount, _data);
+    function execute(Call[] calldata calls) external payable {
+        require(msg.sender == address(this), "Invalid authority");
+        for (uint256 i = 0; i < calls.length; i++) {
+            Call memory call = calls[i];
 
-        return true;
+            (bool success, ) = call.to.call{value: call.value}(call.data);
+
+            // require(success, "call reverted");
+            if (!success) revert TransactionInvalid();
+
+            emit Executed(msg.sender, call.to, call.value, call.data);
+        }
     }
 }

@@ -8,5 +8,9 @@ interface IMasterControl {
     /// @param recipient The recipient address of the transaction
     /// @param amount The amount being transferred
     /// @return bool True if the transaction is allowed, false otherwise
-    function verify(address recipient, uint256 amount) external view returns (bool);
+    function verify(
+        address recipient,
+        uint256 amount,
+        bytes calldata data
+    ) external view returns (bool);
 }
