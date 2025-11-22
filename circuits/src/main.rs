@@ -1,15 +1,27 @@
 use alloy_primitives::Address;
+use clap::Parser;
+use ystd::prelude::*;
 
-fn main() -> color_eyre::Result<()> {
-    let mut rl = rustyline::DefaultEditor::new()?;
+#[derive(Parser)]
+#[command(version, about, long_about = None)]
+struct Cli {
+    #[arg()]
+    master_params_toml: Utf8PathBuf,
+}
 
-    let addr = rl.readline("Address: ")?;
-    let addr = Address::parse_checksummed(addr, None)?;
-    let addr = addr.0.0;
-    // [64, ...]
-    let addr = format!("{:?}", addr);
+struct Params {
+    whitelist: Vec<Address>,
+    max_amount: f64,
+}
 
-    println!("Addr: {:?}", addr);
+#[tokio::main]
+async fn main() -> color_eyre::Result<()> {
+    tracing_subscriber::fmt::init();
+    color_eyre::install()?;
+
+    let cli = Cli::parse();
+    
+    
 
     Ok(())
 }

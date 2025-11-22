@@ -5,6 +5,12 @@ pub struct Address {
     inner: [u8; 20],
 }
 
+impl Address {
+    pub fn new(inner: [u8; 20]) -> Self {
+        Address { inner }
+    }
+}
+
 // impl std::ops::Eq for Address {
 //     fn eq(self, rhs: Address) -> bool {
 //         let mut isEqual = true;
