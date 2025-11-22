@@ -1,2 +1,2 @@
-$env.MASTER_PK = "0xc4836d38ea7582b502cacebf7283ede64f896f8493d57c2d6dc15f7d4981b09d"
-$env.ORG_PK = "a9aee578af24dc5b07bfca650b7197dedfe47d975eeb21c84d38bcaf8ed3bab1"
+$env.MASTER_PK = "0xa9aee578af24dc5b07bfca650b7197dedfe47d975eeb21c84d38bcaf8ed3bab1"
+$env.ORG_PK = "0xc4836d38ea7582b502cacebf7283ede64f896f8493d57c2d6dc15f7d4981b09d"

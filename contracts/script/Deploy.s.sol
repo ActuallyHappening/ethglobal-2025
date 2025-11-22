@@ -13,9 +13,11 @@ contract DeployScript is Script {
 
     function run() public {
         uint256 masterPrivateKey = vm.envOr("MASTER_PK", uint256(0x0));
+        console.log("Master pk:", masterPrivateKey);
         require(masterPrivateKey != 0, "Set MASTER_PK in env");
 
         uint256 orgPrivateKey = vm.envOr("ORG_PK", uint256(0x0));
+        console.log("Org pk:", orgPrivateKey);
         require(orgPrivateKey != 0, "Set ORG_PK in env");
 
         vm.startBroadcast(masterPrivateKey);

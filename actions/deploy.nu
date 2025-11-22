@@ -10,11 +10,18 @@ cd ..
 do {
 	cd contracts
 
-	print "Deploying MasterContract"
+	print "Deploying MasterContract" $env.MASTER_PK $env.ORG_PK
+
+	forge build
+
+	let rpc_url = "localhost:8545"
+
+	(forge script script/Deploy.s.sol:DeployScript
+    --rpc-url $rpc_url)
+
 	let output = (
 	forge script script/Deploy.s.sol:DeployScript
-    # --rpc-url garfield_testnet
-    --rpc-url localhost:8545
+    --rpc-url $rpc_url
 	--broadcast
 	)
 

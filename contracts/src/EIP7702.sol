@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import "./IMasterControl.sol";
+import {IMasterControl} from "./IMasterControl.sol";
 
 contract EIP7702 {
     address public verifyingContract;
@@ -27,8 +27,12 @@ contract EIP7702 {
     }
 
     modifier onlyOwner() {
-        if (owner != msg.sender) revert InvalidMasterControl();
+        _onlyOwner();
         _;
+    }
+
+    function _onlyOwner() internal view {
+        if (owner != msg.sender) revert InvalidMasterControl();
     }
 
     function updateVerifyingContract(
