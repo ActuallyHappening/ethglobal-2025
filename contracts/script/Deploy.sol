@@ -12,10 +12,21 @@ contract MasterScript is Script {
     function setUp() public {}
 
     function run() public {
-        vm.startBroadcast();
+        uint256 masterPrivateKey = vm.envOr("MASTER_PK", uint256(0x0));
+        require(masterPrivateKey != 0, "Set MASTER_PK in env");
+
+        uint256 orgPrivateKey = vm.envOr("ORG_PK", uint256(0x0));
+        require(orgPrivateKey != 0, "Set ORG_PK in env");
+
+        vm.startBroadcast(masterPrivateKey);
 
         masterContract = new MasterContract();
-        console.log("Deployed master contract at: ", address(masterContract));
+        console.log(
+            unicode"Deployed master contract at: 📡",
+            address(masterContract),
+            unicode"📡"
+        );
+
         
         eip7702Contract = new EIP7702(address(masterContract));
 

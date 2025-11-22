@@ -3,16 +3,10 @@ pragma solidity ^0.8.13;
 
 import "./IMasterControl.sol";
 
-/// @title EIP7702
 contract EIP7702 {
-    /// @notice Reference to the MasterContract verifier
     address public verifyingContract;
-
-    /// @notice The master account that can update the validation
-    /// [verifyingContract] of this EOA
     address public owner;
 
-    /// @notice Event emitted when a transaction is validated
     event Executed(
         address indexed caller,
         address indexed recipient,
@@ -20,15 +14,10 @@ contract EIP7702 {
         bytes data
     );
 
-    /// @notice Error when MasterControl address is invalid
     error InvalidMasterControl();
-
-    /// @notice Error when transaction is not allowed
-    error TransactionInvalid();
-
+    error CallInvalid();
     error MustHaveOwner();
 
-    /// @notice Constructor sets the immutable MasterControl address
     constructor(address _verifyingContract, address _owner) {
         if (_verifyingContract == address(0)) revert InvalidMasterControl();
         verifyingContract = _verifyingContract;
@@ -47,6 +36,8 @@ contract EIP7702 {
     ) external onlyOwner {
         verifyingContract = _verifyingContract;
     }
+
+    receive() external payable {}
 
     function verify(Call calldata _call) public view returns (bool) {
         bool allowed = IMasterControl(verifyingContract).verify(
@@ -70,8 +61,7 @@ contract EIP7702 {
 
             (bool success, ) = call.to.call{value: call.value}(call.data);
 
-            // require(success, "call reverted");
-            if (!success) revert TransactionInvalid();
+            if (!success) revert CallInvalid();
 
             emit Executed(msg.sender, call.to, call.value, call.data);
         }
