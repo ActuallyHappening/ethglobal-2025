@@ -1,3 +1,14 @@
+# How to run project
+Install `npm`.
+
+Install [`nushell` using this link or the below example script](https://www.nushell.sh/book/installation.html):
+```sh
+# Example that will probably "just work"
+npm install -g nushell
+```
+
+
+
 # Project Descriptions:
 ## Problem statement
 *Org* is considered untrusted.

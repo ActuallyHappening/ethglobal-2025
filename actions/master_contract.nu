@@ -1,4 +1,13 @@
-# Deploy contracts/MasterContract.sol
+# All logic to generate ZK proof given master_params.toml
+
+source ../env.nu
+
+# cd to root of project
+const scripts_dir = path self .
+cd $scripts_dir
+cd ..
+
+
 
 do {
 	cd contracts
@@ -7,7 +16,8 @@ do {
 	(
 	forge script script/MasterContract.s.sol:MasterScript
     --rpc-url garfield_testnet
-    --account testnetKey
+    --private-key $env.MASTER_PK
+    # --account testnetKey
 	--broadcast
 	)
 
