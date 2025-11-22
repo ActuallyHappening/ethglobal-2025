@@ -3,6 +3,12 @@ pragma solidity ^0.8.13;
 
 import {IMasterControl} from "./IMasterControl.sol";
 
+struct Call {
+    address to;
+    uint256 value;
+    bytes data;
+}
+
 contract EIP7702 {
     address public verifyingContract;
     address public owner;
@@ -50,12 +56,6 @@ contract EIP7702 {
             _call.data
         );
         return allowed;
-    }
-
-    struct Call {
-        address to;
-        uint256 value;
-        bytes data;
     }
 
     function execute(Call[] calldata calls) external payable {
