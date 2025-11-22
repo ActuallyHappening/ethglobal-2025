@@ -3,6 +3,7 @@
 *Org* is considered untrusted.
 All of *Org*s transactions should be filtered by *Master*.
 But *Master* doesn't want his policies being public.
+- [] And *Master* want's his policies to be applied cross-chain
 
 ## Terminology and topology
 Accounts involved (named suggestively):
