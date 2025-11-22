@@ -7,6 +7,12 @@ const scripts_dir = path self .
 cd $scripts_dir
 cd ..
 
+let _live = input "Live? (y/N): "
+mut live = false;
+if _live == "y" {
+	$live = true
+}
+
 do {
 	cd contracts
 
