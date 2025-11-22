@@ -1,7 +1,12 @@
-Zircuit Garfield Testnet
+# Project Descriptions:
+Accounts involved (named suggestively):
+- *Org* account
+- *Master* account
 
-Blockchain explorer: https://explorer.garfield-testnet.zircuit.com
-
-How to verify: https://docs.zircuit.com/infra/explorer/verify
-
-EPI-7702: https://eips.ethereum.org/EIPS/eip-7702
+Contracts involved:
+- **7702** is the EIP-7702 "contract" assigned to *Org*
+- **pMasterControl** (abbreviated **pMC**) is the static proxy.
+**7702** always points to this proxy.
+This proxy is controllable by *Master*.
+This proxy points to **MasterControl**
+- **MasterControl** is a Noir ZK filter contract
