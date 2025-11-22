@@ -7,21 +7,21 @@ const scripts_dir = path self .
 cd $scripts_dir
 cd ..
 
-
-
 do {
 	cd contracts
 
 	print "Deploying MasterContract"
-	(
-	forge script script/MasterContract.s.sol:MasterScript
-    --rpc-url garfield_testnet
-    --private-key $env.MASTER_PK
-    # --account testnetKey
+	let output = (
+	forge script script/Deploy.s.sol:DeployScript
+    # --rpc-url garfield_testnet
+    --rpc-url localhost:8545
 	--broadcast
 	)
 
-	let $contract_address = input "Contract Address: "
+	# extract string between markers 📡
+	let contract_address = $output | split row '📡' | get 1 | str trim
+	print "Deployed master contract at: $contract_address"
+	# let $contract_address = input "Contract Address: "
 
 	(forge verify-contract -vvvvv $"($contract_address)" src/MasterContract.sol:MasterContract
 	--chain-id 48898

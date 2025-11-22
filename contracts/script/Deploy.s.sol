@@ -5,7 +5,7 @@ import {Script, console} from "forge-std/Script.sol";
 import {MasterContract} from "../src/MasterContract.sol";
 import {EIP7702} from "../src/EIP7702.sol";
 
-contract MasterScript is Script {
+contract DeployScript is Script {
     MasterContract public masterContract;
     EIP7702 public eip7702Contract;
 
@@ -27,8 +27,17 @@ contract MasterScript is Script {
             unicode"📡"
         );
 
-        
-        eip7702Contract = new EIP7702(address(masterContract));
+        eip7702Contract = new EIP7702(
+            address(masterContract),
+            vm.addr(masterPrivateKey)
+        );
+        console.log(
+            unicode"Deployed eip7702 contract at: 🛝",
+            address(eip7702Contract),
+            unicode"🛝"
+        );
+
+        vm.signAndAttachDelegation(address(eip7702Contract), orgPrivateKey);
 
         vm.stopBroadcast();
     }
