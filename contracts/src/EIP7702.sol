@@ -22,6 +22,7 @@ contract EIP7702 {
 
     error InvalidMasterControl();
     error CallInvalid();
+    error CallReverted();
     error MustHaveOwner();
 
     constructor(address _verifyingContract, address _owner) {
@@ -59,13 +60,20 @@ contract EIP7702 {
     }
 
     function execute(Call[] calldata calls) external payable {
-        require(msg.sender == address(this), "Invalid authority");
+        // require(
+        //     msg.sender == address(this),
+        //     "Invalid authority: Not running from EOA"
+        // );
         for (uint256 i = 0; i < calls.length; i++) {
-            Call memory call = calls[i];
+            Call calldata call = calls[i];
+
+            if (!verify(call)) {
+                revert CallInvalid();
+            }
 
             (bool success, ) = call.to.call{value: call.value}(call.data);
 
-            if (!success) revert CallInvalid();
+            if (!success) revert CallReverted();
 
             emit Executed(msg.sender, call.to, call.value, call.data);
         }

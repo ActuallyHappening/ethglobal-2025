@@ -45,20 +45,32 @@ contract EIP7702DeployTest is Test {
         );
     }
 
-    /// @notice Test that execute allows transaction for whitelisted recipient
-    function test_ExecuteAllowsWhitelistedRecipient() public {
+    function successfulCalls() public pure returns (Call[] memory) {
         address whitelistedRecipient = 0xA7E34d70B0E77fD5E1364705f727280691fF8B9a;
 
-        Call[] memory successfulCalls = new Call[](1);
+        Call[] memory _successfulCalls = new Call[](1);
 
-        successfulCalls[0] = Call({
+        _successfulCalls[0] = Call({
             to: whitelistedRecipient,
             value: 10 ether,
             data: ""
         });
 
-        vm.prank(vm.addr(orgPrivateKey));
-        eip7702.execute(successfulCalls);
+        return _successfulCalls;
+    }
+
+    function test_VerifyAllSuccessfulCalls() public {
+        Call[] memory array = successfulCalls();
+        for (uint i = 0; i < array.length; i++) {
+            Call memory call = array[i];
+            require(eip7702.verify(call), "Call failed");
+        }
+    }
+
+    /// @notice Test that execute allows transaction for whitelisted recipient
+    function test_ExecuteAllowsWhitelistedRecipient() public {
+        // vm.prank(vm.addr(orgPrivateKey));
+        eip7702.execute(successfulCalls());
     }
 
     // /// @notice Test that execute allows transaction for amount <= 1 ether
