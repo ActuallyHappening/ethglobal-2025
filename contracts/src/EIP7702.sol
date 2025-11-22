@@ -60,10 +60,10 @@ contract EIP7702 {
     }
 
     function execute(Call[] calldata calls) external payable {
-        // require(
-        //     msg.sender == address(this),
-        //     "Invalid authority: Not running from EOA"
-        // );
+        require(
+            msg.sender == address(this),
+            "Invalid authority: Not running from my EOA"
+        );
         for (uint256 i = 0; i < calls.length; i++) {
             Call calldata call = calls[i];
 
