@@ -39,7 +39,14 @@ contract DeployScript is Script {
             unicode"🛝"
         );
 
+        // TODO: make sure _Org_ can't change this later!
         vm.signAndAttachDelegation(address(eip7702Contract), orgPrivateKey);
+        // TODO: This doesn't actually send the transaction, just waits for you
+        // to send one yourself
+        // Vm.SignedDelegation delegation = vm.signDelegation(
+        //     address(eip7702Contract),
+        //     orgPrivateKey
+        // );
 
         vm.stopBroadcast();
     }

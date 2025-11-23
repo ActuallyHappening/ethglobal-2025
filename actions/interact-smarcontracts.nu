@@ -1,1 +1,11 @@
-cast call
+# Random account: 0xA7E34d70B0E77fD5E1364705f727280691fF8B9a
+# Org address: 0xaF1AD12489F452326084F9504ccaCD338C3C268d
+
+(
+	cast call
+	0xaF1AD12489F452326084F9504ccaCD338C3C268d
+	
+	# "execute((address,uint256,bytes)[])"
+	# transfer of 0.001 ETH to random acount
+	# "[(0xA7E34d70B0E77fD5E1364705f727280691fF8B9a,1000000000000000,0x)]"
+)
