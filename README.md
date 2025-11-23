@@ -3,8 +3,8 @@ Privilege de-escalation EIP7702 enforced by a master EOA with updatable on-chain
 
 Privilege de-escalation enforced by a static master address, hereby called _Master_, who reserves the right to update policies enforced on the de-escalated account, hereby called _Org_. The intent is that _Org_ is generally untrusted and needs strictly enforced, on-chain boundaries as controlled by _Master_. This is achieved through an EIP7702 contract with a stored owner (_Master_) address, and which _Org_ unconditionally authorizes himself to be bound to. The EIP7702 contract stores a pointer to the contract address _Master_ wishes to validate, which has the ABI `function verify(address recipient, uint256 amount, bytes calldata data) external view returns (bool);`, and which _Org_'s EIP7702 contract (must) validate against for each transaction. The _Master_ controlled contract can therefore implement any logic it wants, we implemented a whitelist and a maximum native ETH transfer limit as examples.
 
-The project was deployed on the polygon chain.
-This L1 with permissionless validators had low gas fees and fast transaction times, great for development and UX!
+This project was deployed on the Zircuit chain. This is an amazing L2 for its quick finalization time and low gas fees, but the killer features is its AI-powered screening for malicious transactions.
+Seeing as the whole point of this hackathon project is to reduce the chances of malicious transactions being verified, Zircuit seemed a good fit!
 We used Foundry for contract creation testing and deployment, as well as verification.
 Noir from AZTEC was going to be used as well, however it turns out that the ZK cryptographic primitive doesn't preserve the privacy
 of policies that _Master_ sets unfortunately.
