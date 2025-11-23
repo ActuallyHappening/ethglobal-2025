@@ -33,7 +33,7 @@ contract EIP7702DeployTest is Test {
         // );
 
         // Deploy MasterContract
-        masterContract = new MasterContract();
+        masterContract = new MasterContract(vm.addr(masterPrivateKey));
 
         // Deploy EIP7702 with MasterContract address
         eip7702 = new EIP7702(address(masterContract), address(this));

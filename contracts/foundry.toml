@@ -11,3 +11,5 @@ solc = "0.8.13"
 [rpc_endpoints]
 zircuit_mainnet = "https://mainnet.zircuit.com"
 garfield_testnet = "https://garfield-testnet.zircuit.com"
+
+amoy_testnet = "https://rpc-amoy.polygon.technology/"

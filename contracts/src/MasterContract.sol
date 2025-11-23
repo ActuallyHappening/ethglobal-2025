@@ -11,12 +11,12 @@ contract MasterContract {
     }
 
     modifier onlyOwner() {
-        require(msg.sender == owner, "Only owner can call this function");
+        _onlyOwner();
         _;
     }
 
-    function _onlyOwner() public view returns (bool) {
-        return msg.sender == owner;
+    function _onlyOwner() internal {
+        require(msg.sender == owner, "Only owner can call this function");
     }
 
     function addToWhitelist(address _wallet) external onlyOwner {
