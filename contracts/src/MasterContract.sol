@@ -3,6 +3,10 @@
 pragma solidity ^0.8.13;
 
 contract MasterContract {
+	address[] public whitelist;
+	
+	
+	
     function verify(
         address recipient,
         uint256 amount,

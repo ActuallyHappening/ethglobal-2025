@@ -1,10 +1,10 @@
 'use client';
 
 import Image from "next/image";
-import { useConnect, useAccount, useDisconnect, useSwitchChain, useConfig, useWalletClient } from 'wagmi';
+// import { useConnect, useAccount, useDisconnect, useSwitchChain, useConfig, useWalletClient } from 'wagmi';
 import { useState } from 'react';
-import { parseEther, type Address, createWalletClient, custom, createPublicClient, http, getAddress, encodeFunctionData } from 'viem';
-import { eip7702Actions } from 'viem/experimental';
+// import { parseEther, type Address, createWalletClient, custom, createPublicClient, http, getAddress, encodeFunctionData } from 'viem';
+// import { eip7702Actions } from 'viem/experimental';
 
 // Dirección del contrato al que se delega
 const DELEGATE_CONTRACT = '0xBCAA669EC44d6eCBc291f5cf9cB0215E9784b857' as Address;
