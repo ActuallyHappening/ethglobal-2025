@@ -36,12 +36,12 @@ do {
 
 	if not $local {
 		(forge verify-contract -vvvvv $"($master_addr)" src/MasterContract.sol:MasterContract
-		--chain-id 80002
+		--chain-id 48898
 		--verifier sourcify
 		--verifier-url https://sourcify.dev/server)
 
 		(forge verify-contract -vvvvv $"($eip7702_addr)" src/EIP7702.sol:EIP7702
-		--chain-id 80002
+		--chain-id 48898
 		--verifier sourcify
 		--verifier-url https://sourcify.dev/server)
 
