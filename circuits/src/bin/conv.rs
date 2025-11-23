@@ -14,7 +14,7 @@ struct Cli {
 
 #[derive(clap::Subcommand)]
 enum Conv {
-    ///cargo r --bin conv num-to-bytes $"(500 * 10 ** 15)"
+    /// cargo r --bin conv num-to-bytes $"(500 * 10 ** 15)"
     NumToBytes { num: String },
     /// cargo r --bin conv address-to-bytes 0xA7E34d70B0E77fD5E1364705f727280691fF8B9a
     AddressToBytes { addr: Address },
