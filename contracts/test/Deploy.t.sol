@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.13;
 
-import "forge-std/Test.sol";
+import {Test, console} from "forge-std/Test.sol";
 import {EIP7702, Call} from "../src/EIP7702.sol";
-import "../src/MasterContract.sol";
+import {MasterContract} from "../src/MasterContract.sol";
 
 /// @title EIP7702DeployTest
 /// @notice Tests for basic deployment and initialization of EIP7702 with MasterContract

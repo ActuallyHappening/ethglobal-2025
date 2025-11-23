@@ -4,12 +4,26 @@ pragma solidity ^0.8.13;
 contract MasterContract {
     mapping(address => bool) public whitelist;
     uint256 public maxTransfer;
+    address public owner;
 
-    function addToWhitelist(address _wallet) external {
+    constructor(address _owner) {
+        owner = _owner;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only owner can call this function");
+        _;
+    }
+
+    function _onlyOwner() public view returns (bool) {
+        return msg.sender == owner;
+    }
+
+    function addToWhitelist(address _wallet) external onlyOwner {
         whitelist[_wallet] = true;
     }
 
-    function removeFromWhitelist(address _wallet) external {
+    function removeFromWhitelist(address _wallet) external onlyOwner {
         whitelist[_wallet] = false;
     }
 
@@ -17,7 +31,7 @@ contract MasterContract {
         return whitelist[_wallet];
     }
 
-    function setMaxTransfer(uint256 _maxTransfer) external {
+    function setMaxTransfer(uint256 _maxTransfer) external onlyOwner {
         maxTransfer = _maxTransfer;
     }
 

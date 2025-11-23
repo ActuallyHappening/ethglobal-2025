@@ -22,7 +22,7 @@ contract DeployScript is Script {
 
         vm.startBroadcast(masterPrivateKey);
 
-        masterContract = new MasterContract();
+        masterContract = new MasterContract(vm.addr(masterPrivateKey));
         console.log(
             unicode"Deployed master contract at: 📡",
             address(masterContract),
