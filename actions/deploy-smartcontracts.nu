@@ -17,8 +17,7 @@ do {
 
 	forge build
 
-	# let rpc_url = if $local { "localhost:8545" } else { "garfield_testnet" }
-	let rpc_url = "amoy_testnet"
+	let rpc_url = "garfield_testnet"
 
 	# Uncomment for better debugging
 	# forge script script/Deploy.s.sol:DeployScript --rpc-url $rpc_url
@@ -46,9 +45,9 @@ do {
 		--verifier sourcify
 		--verifier-url https://sourcify.dev/server)
 
-		# print $"Verified master contract: https://explorer.garfield-testnet.zircuit.com/address/($master_addr)"
-		# print $"Verified EIP7702 contract: https://explorer.garfield-testnet.zircuit.com/address/($eip7702_addr)"
-		print $"Verified master contract: https://amoy.polygonscan.com/address/($master_addr)"
-		print $"Verified EIP7702 contract: https://amoy.polygonscan.com/address/($eip7702_addr)"
+		print $"Verified master contract: https://explorer.garfield-testnet.zircuit.com/address/($master_addr)"
+		print $"Verified EIP7702 contract: https://explorer.garfield-testnet.zircuit.com/address/($eip7702_addr)"
+		# print $"Verified master contract: https://amoy.polygonscan.com/address/($master_addr)"
+		# print $"Verified EIP7702 contract: https://amoy.polygonscan.com/address/($eip7702_addr)"
 	}
 }

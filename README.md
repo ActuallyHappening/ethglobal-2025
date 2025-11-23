@@ -6,7 +6,7 @@ Privilege de-escalation enforced by a static master address, hereby called _Mast
 The project was deployed on the polygon chain.
 This L1 with permissionless validators had low gas fees and fast transaction times, great for development and UX!
 We used Foundry for contract creation testing and deployment, as well as verification.
-Noir from AZTEC was used as well, however it turns out that the ZK cryptographic primitive doesn't preserve the privacy
+Noir from AZTEC was going to be used as well, however it turns out that the ZK cryptographic primitive doesn't preserve the privacy
 of policies that _Master_ sets unfortunately.
 
 ### Problems with this approach
