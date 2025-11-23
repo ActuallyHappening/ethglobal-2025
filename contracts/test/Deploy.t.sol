@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.13;
 
 import "forge-std/Test.sol";
@@ -11,23 +11,38 @@ contract EIP7702DeployTest is Test {
     EIP7702 public eip7702;
     MasterContract public masterContract;
     uint256 orgPrivateKey;
+    uint256 masterPrivateKey;
 
     function setUp() public {
+        orgPrivateKey = vm.envOr("ORG_PK", uint256(0x0));
+        console.log("Org pk:", orgPrivateKey);
+        require(orgPrivateKey != 0, "Set ORG_PK in env");
+
+        masterPrivateKey = vm.envOr("MASTER_PK", uint256(0x0));
+        console.log("Master pk:", masterPrivateKey);
+        require(masterPrivateKey != 0, "Set MASTER_PK in env");
+
+        // I want this to work!! uuuh
+        // vm.startBroadcast(orgPrivateKey);
+        // vm.startPrank(vm.addr(orgPrivateKey), vm.addr(orgPrivateKey), true);
+        vm.startPrank(vm.addr(orgPrivateKey));
+        // assertEq(
+        //     vm.addr(orgPrivateKey),
+        //     msg.sender,
+        //     "Not broadcasting from org account?"
+        // );
+
         // Deploy MasterContract
         masterContract = new MasterContract();
 
         // Deploy EIP7702 with MasterContract address
         eip7702 = new EIP7702(address(masterContract), address(this));
 
-        orgPrivateKey = vm.envOr("ORG_PK", uint256(0x0));
-        console.log("Org pk:", orgPrivateKey);
-        require(orgPrivateKey != 0, "Set ORG_PK in env");
-
         vm.signAndAttachDelegation(address(eip7702), orgPrivateKey);
     }
 
     /// @notice Test that contracts deploy with non-zero addresses
-    function test_DeploymentsSucceed() public {
+    function test_DeploymentsSucceed() public view {
         assertNotEq(
             address(masterContract),
             address(0),
@@ -37,7 +52,7 @@ contract EIP7702DeployTest is Test {
     }
 
     /// @notice Test that EIP7702 stores the correct MasterControl address
-    function test_MasterControlAddressIsSet() public {
+    function test_MasterControlAddressIsSet() public view {
         assertEq(
             eip7702.verifyingContract(),
             address(masterContract),
@@ -45,25 +60,38 @@ contract EIP7702DeployTest is Test {
         );
     }
 
-    function successfulCalls() public pure returns (Call[] memory) {
+    function successfulCalls() public returns (Call[] memory) {
+        masterContract.setMaxTransfer(1 ether);
+        Call[] memory _successfulCalls = new Call[](2);
+
+        // allow transfer
         address whitelistedRecipient = 0xA7E34d70B0E77fD5E1364705f727280691fF8B9a;
-
-        Call[] memory _successfulCalls = new Call[](1);
-
+        masterContract.addToWhitelist(whitelistedRecipient);
         _successfulCalls[0] = Call({
             to: whitelistedRecipient,
-            value: 10 ether,
+            value: 0.5 ether,
+            data: ""
+        });
+
+        masterContract.addToWhitelist(vm.addr(masterPrivateKey));
+        _successfulCalls[1] = Call({
+            to: vm.addr(masterPrivateKey),
+            value: 0.1 ether,
             data: ""
         });
 
         return _successfulCalls;
     }
 
-    function test_VerifyAllSuccessfulCalls() public view {
+    function test_VerifyAllSuccessfulCalls() public {
         Call[] memory array = successfulCalls();
         for (uint i = 0; i < array.length; i++) {
             Call memory call = array[i];
-            require(eip7702.verify(call), "Call failed");
+            require(eip7702.verify(call), "Call expected to be verified");
+            require(
+                masterContract.verify(call.to, call.value, call.data),
+                "Call expected ot be verified"
+            );
         }
     }
 
@@ -71,7 +99,6 @@ contract EIP7702DeployTest is Test {
 
     // /// @notice Test that execute allows transaction for whitelisted recipient
     // function test_ExecuteAllowsWhitelistedRecipient() public {
-    //     vm.prank(vm.addr(orgPrivateKey));
     //     eip7702.execute(successfulCalls());
     // }
 

@@ -7,8 +7,8 @@ const scripts_dir = path self .
 cd $scripts_dir
 cd ..
 
-let local = (input "Local? (Y/n): ") != "n"
-print "local" $local
+# let local = (input "Local? (Y/n): ") != "n"
+let local = false
 
 do {
 	cd contracts
@@ -19,13 +19,13 @@ do {
 
 	let rpc_url = if $local { "localhost:8545" } else { "garfield_testnet" }
 
-	(forge script script/Deploy.s.sol:DeployScript
-    --rpc-url $rpc_url)
+	# Uncomment for better debugging
+	# forge script script/Deploy.s.sol:DeployScript --rpc-url $rpc_url
 
 	let output = (
-	forge script script/Deploy.s.sol:DeployScript
-    --rpc-url $rpc_url
-	--broadcast
+		forge script script/Deploy.s.sol:DeployScript
+	    --rpc-url $rpc_url
+		--broadcast
 	)
 
 	# extract string between markers 📡

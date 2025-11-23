@@ -1,25 +1,33 @@
 // SPDX-License-Identifier: GPL-3.0
-
 pragma solidity ^0.8.13;
 
 contract MasterContract {
-	address[] public whitelist;
-	
-	
-	
+    mapping(address => bool) public whitelist;
+    uint256 public maxTransfer;
+
+    function addToWhitelist(address _wallet) external {
+        whitelist[_wallet] = true;
+    }
+
+    function removeFromWhitelist(address _wallet) external {
+        whitelist[_wallet] = false;
+    }
+
+    function whitelistContains(address _wallet) public view returns (bool) {
+        return whitelist[_wallet];
+    }
+
+    function setMaxTransfer(uint256 _maxTransfer) external {
+        maxTransfer = _maxTransfer;
+    }
+
     function verify(
         address recipient,
         uint256 amount,
         bytes calldata data
-    ) public pure returns (bool) {
-        if (recipient == 0xA7E34d70B0E77fD5E1364705f727280691fF8B9a) {
+    ) external view returns (bool) {
+        if (whitelistContains(recipient) && amount <= maxTransfer) {
             return true;
-        }
-        if (amount <= 1 ether) {
-            return true;
-        }
-        if (data.length != 0) {
-            // return true;
         }
         return false;
     }
