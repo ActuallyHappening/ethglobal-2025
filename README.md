@@ -3,6 +3,14 @@ Privilege de-escalation EIP7702 enforced by a master EOA with updatable on-chain
 
 Privilege de-escalation enforced by a static master address, hereby called _Master_, who reserves the right to update policies enforced on the de-escalated account, hereby called _Org_. The intent is that _Org_ is generally untrusted and needs strictly enforced, on-chain boundaries as controlled by _Master_. This is achieved through an EIP7702 contract with a stored owner (_Master_) address, and which _Org_ unconditionally authorizes himself to be bound to. The EIP7702 contract stores a pointer to the contract address _Master_ wishes to validate, which has the ABI `function verify(address recipient, uint256 amount, bytes calldata data) external view returns (bool);`, and which _Org_'s EIP7702 contract (must) validate against for each transaction. The _Master_ controlled contract can therefore implement any logic it wants, we implemented a whitelist and a maximum native ETH transfer limit as examples.
 
+The project was deployed on the Zircuit chain only. This is an amazing L2 for its quick finalization time and low gas fees,
+but the killer features is its AI-powered screening for malicious transactions.
+Seeing as the whole point of this hackathon project is to reduce the chances of malicious transactions being verified,
+Zircuit seemed a good fit!
+We used Foundry for contract creation testing and deployment, as well as verification.
+Noir from AZTEC was used as well, however it turns out that the ZK cryptographic primitive doesn't preserve the privacy
+of policies that _Master_ sets unfortunately.
+
 ### Problems with this approach
 An EOA can always revoke an authorisation. There is no way for _Master_ to prevent this.
 Therefore EIP7702 can't effectively be used as privilege de-escalation.
@@ -23,10 +31,13 @@ update forge-std.
 
 ### Future considerations
 The initial goal of this project was to maintain privacy in the policies set by _Master_.
-I put a lot of work into building some `Noir` circuits, see [the circuits folder](./circuits)
+I put a lot of work and manny hours into building some `Noir` circuits, see [the circuits folder](./circuits)
 and [the generate-zk.nu script](./actions/generate-zk.nu).
 Unfortunately, I didn't understand ZK enough when I first started hacking (absolutely no experience before)
-and so the policies have to be enforced onchain, which means being *public*
+and so didn't realise the policies had to be enforced onchain, which means they must be *public* because onchain means public.
+AZTEC would solve this problem, but I didn't have enough time from realising my mistake!
+I also wrote my first lines of Solidity, deployed and verified my first smart contract, and wrote my first Foundry tests
+in this hackathon which ate up a significant amount of time.
 
 
 ## How to run project
@@ -42,7 +53,7 @@ do {
 nu actions/deploy-smartcontracts.nu
 ```
 
-## The failed ZK aspect
+### The failed ZK aspect
 Install `nargo` (from Noir, AZTEC). Install `bb` (from AZTEC).
 ```nu
 nu actions/generate-zk.nu
