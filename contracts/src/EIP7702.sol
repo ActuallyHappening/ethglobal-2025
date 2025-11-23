@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.13;
 
 import {IMasterControl} from "./IMasterControl.sol";
@@ -48,6 +48,7 @@ contract EIP7702 {
         verifyingContract = _verifyingContract;
     }
 
+    /// @notice Allows receiving ETHer as normal
     receive() external payable {}
 
     function verify(Call calldata _call) public view returns (bool) {

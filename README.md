@@ -1,46 +1,30 @@
 # How to run project
 Install `npm`.
 
-Install [`nushell` using this link or the below example script](https://www.nushell.sh/book/installation.html):
+```nu
+cd frontend
+
+npm run dev
+# open localhost:3000 # in browser
+```
+
+
+# Project Descriptions:
+Privilege de-escalation enforced by a static master address, hereby called _Master_, who reserves the right to update policies enforced on the de-escalated account, hereby called _Org_. The intent is that _Org_ is generally untrusted and needs strictly enforced, on-chain boundaries as controlled by _Master_. This is achieved through an EIP7702 contract with a stored owner (_Master_) address, and which _Org_ unconditionally authorizes himself to be bound to. The EIP7702 contract stores a pointer to the contract address _Master_ wishes to validate, which has the ABI `function verify(address recipient, uint256 amount, bytes calldata data) external view returns (bool);`, and which _Org_'s EIP7702 contract (must) validate against for each transaction. The _Master_ controlled contract can therefore implement any logic it wants, we implemented a whitelist and a maximum native ETH transfer limit as examples.
+
+
+
+
+## Development tools
+Install [`nushell` using this link or the below example script](https://www.nushell.sh/book/installation.html)
+to allow rebuilding the contracts:
 ```sh
 # Example that will probably "just work"
 npm install -g nushell
 ```
+Then you can run
+```nu
+source env.nu
 
-
-
-# Project Descriptions:
-## Problem statement
-*Org* is considered untrusted.
-All of *Org*s transactions should be filtered by *Master*.
-But *Master* doesn't want his policies being public.
-- [] And *Master* want's his policies to be applied cross-chain
-
-## Terminology and topology
-Accounts involved (named suggestively):
-- *Org* account
-- *Master* account
-
-Contracts involved:
-- **7702** is the EIP-7702 "contract" assigned to *Org*
-- **pMasterControl** (abbreviated **pMC**) is the static proxy.
-**7702** always points to this proxy.
-This proxy is controllable by *Master*.
-This proxy points to **MasterControl**.
-- **MasterControl** is a Noir ZK filter contract
-
-## Solution
-Using ZK, *Master* can deploy his **MasterControl** contract, which takes as
-input the details of the transaction and will fail (revert) if the transaction
-is deemed invalid.
-*Org* then MUST willingly subdue itself under *Master* by deploying its **7702**
-contract.
-
-## Requirements
-- **7702** contract must be permanent, and must not be able to be taken down by
-the contract
-
-## Problems
-Since the ZK proof is on chain, anybody can download it and manually run it against
-transactions to gain a rough and approximate idea of what policies *Master*
-has set.
+nu actions/deploy-smartcontracts.nu
+```
